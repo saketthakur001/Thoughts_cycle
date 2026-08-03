@@ -56,13 +56,35 @@ while True:
 #---- Reading part ----------------------------------------------------------
     elif '-r' == q:
         print('-h for help')
-        r = input('what do you wanna read: ')
+        r = input('what do you wanna read (-t thoughts / -d diary): ')
         if r == '-h':
             instrucitons()
-            
+        elif r in ('-t', '-d'):
+            filename = 'thoughts.dat' if r == '-t' else 'diary.dat'
+            label = 'Thoughts' if r == '-t' else 'Diary'
+            entries = []
+            try:
+                with open(filename, 'rb') as f:
+                    while True:
+                        try:
+                            entries.append(pickle.load(f))
+                        except EOFError:
+                            break
+            except FileNotFoundError:
+                entries = []
+
+            if not entries:
+                print(f'No {label.lower()} entries saved yet.')
+            else:
+                print(f'--- {label} entries ---')
+                for i, entry in enumerate(entries, 1):
+                    print(f'{i}. {entry.strip()}')
+                print(f'--- {len(entries)} entries total ---')
+        else:
+            print('Unknown option. Use -h for help.')
+
     elif 'saket' == q:
         print()
 
     elif q == 'exit': # this will break the code and the program will exit
         break
-`1`
